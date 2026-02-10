@@ -1,10 +1,3 @@
-"""
-Dashboard de Performance Logística
-===================================
-Streamlit · Pandas · Plotly
-Executar: streamlit run app.py
-"""
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -57,7 +50,6 @@ CHART_LAYOUT = dict(
     separators=",.",
 )
 
-# Cores de eixo aplicadas após cada update_layout
 AXIS_STYLE = dict(
     tickfont=dict(color="#334155", size=12),
     title_font=dict(color="#1E293B", size=13),
@@ -424,7 +416,6 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    # Período
     min_date = df_raw["data_pedido"].min().date()
     max_date = df_raw["data_pedido"].max().date()
     cd1, cd2 = st.columns(2)
@@ -433,15 +424,12 @@ with st.sidebar:
     with cd2:
         data_fim = st.date_input("Até", value=max_date, min_value=min_date, max_value=max_date)
 
-    # Transportadora
     transportadoras = sorted(df_raw["transportadora"].dropna().unique())
     sel_transp = st.multiselect("Transportadora", transportadoras, default=transportadoras)
 
-    # Hub de origem
     hubs = sorted(df_raw["cidade_origem"].dropna().unique())
     sel_hubs = st.multiselect("Hub de Origem", hubs, default=hubs)
 
-    # Status
     statuses = sorted(df_raw["status_entrega"].dropna().unique())
     sel_status = st.multiselect("Status", statuses, default=statuses)
 
@@ -577,7 +565,6 @@ tab_perf, tab_mapa, tab_custo, tab_decisao = st.tabs([
 with tab_perf:
     col_a, col_b = st.columns(2)
 
-    # ── Tempo Médio por Transportadora ──
     with col_a:
         df_tempo = (
             df.groupby("transportadora")["prazo_real_dias"]
@@ -600,7 +587,6 @@ with tab_perf:
         _apply_axis_style(fig)
         st.plotly_chart(fig, width='stretch', theme=None)
 
-    # ── OTD por Transportadora ──
     with col_b:
         df_otd = (
             df.groupby("transportadora")["no_prazo"]
@@ -647,7 +633,6 @@ with tab_perf:
     _apply_axis_style(fig)
     st.plotly_chart(fig, width='stretch', theme=None)
 
-    # ── Cards por Hub ──
     st.markdown(section_title("map-pin", "Performance por Hub de Origem"), unsafe_allow_html=True)
 
     df_hub = (
@@ -734,20 +719,17 @@ with tab_mapa:
         lat = hub["lat"] + lat_offset
         lon = hub["lon"] + lon_offset
 
-        # Limites do território brasileiro (latitude)
+       
         lat = np.clip(lat, -32.5, 4.0)
 
-        # Pegar limites leste (costa) e oeste (divisa) para essa latitude
+        
         east_lon = _interp_border(lat, _COAST_EAST)
         west_lon = _interp_border(lat, _BORDER_WEST)
 
-        # Margem de 0.8° para dentro de cada fronteira
         east_limit = east_lon - 0.8
         west_limit = west_lon + 0.8
 
-        # Garantir que lon está dentro do polígono do Brasil
         if lon > east_limit:
-            # Remapear para o interior, proporcional ao hash
             frac = (h % 5000) / 5000
             lon = west_limit + frac * (east_limit - west_limit)
         elif lon < west_limit:
@@ -758,7 +740,6 @@ with tab_mapa:
 
     st.markdown(section_title("map-pin", "Mapa Interativo — Fluxos Origem → Destino"), unsafe_allow_html=True)
 
-    # Agregar rotas: origem → destino
     df_routes = (
         df.groupby(["cidade_origem", "cidade_destino"])
         .agg(
@@ -771,7 +752,6 @@ with tab_mapa:
     )
     avg_atraso_global = df_routes["atraso_medio"].mean()
 
-    # Gerar coordenadas dos destinos
     dest_coords = df_routes.apply(
         lambda r: _dest_coords(r["cidade_destino"], r["cidade_origem"]), axis=1
     )
@@ -781,7 +761,6 @@ with tab_mapa:
     df_routes["orig_lon"] = df_routes["cidade_origem"].map(lambda x: HUB_COORDS[x]["lon"])
     df_routes["is_delayed"] = df_routes["atraso_medio"] > avg_atraso_global
 
-    # Slider para controlar quantas rotas exibir (máximo = todas)
     total_routes = len(df_routes)
     top_n = st.slider(
         "Rotas exibidas (por volume)", min_value=10, max_value=total_routes,
@@ -792,7 +771,6 @@ with tab_mapa:
 
     fig = go.Figure()
 
-    # Arcos das rotas normais (azul)
     df_ok = df_top[~df_top["is_delayed"]]
     for _, r in df_ok.iterrows():
         fig.add_trace(go.Scattergeo(
@@ -808,7 +786,6 @@ with tab_mapa:
             showlegend=False,
         ))
 
-    # Arcos das rotas com atraso (vermelho)
     df_delay = df_top[df_top["is_delayed"]]
     for _, r in df_delay.iterrows():
         fig.add_trace(go.Scattergeo(
@@ -824,7 +801,6 @@ with tab_mapa:
             showlegend=False,
         ))
 
-    # Pontos de destino
     fig.add_trace(go.Scattergeo(
         lat=df_top["dest_lat"], lon=df_top["dest_lon"],
         mode="markers",
@@ -835,7 +811,6 @@ with tab_mapa:
         hoverinfo="skip", showlegend=False,
     ))
 
-    # Hubs de origem (bolhas grandes)
     df_hub_map = (
         df.groupby("cidade_origem")
         .agg(volume=("pedido_id", "count"), otd=("no_prazo", "mean"))
@@ -861,7 +836,7 @@ with tab_mapa:
         showlegend=False,
     ))
 
-    # Labels dos hubs
+    
     fig.add_trace(go.Scattergeo(
         lat=df_hub_map["lat"] + 1.0, lon=df_hub_map["lon"],
         text=df_hub_map["cidade_origem"], mode="text",
@@ -908,7 +883,7 @@ with tab_mapa:
     _apply_axis_style(fig)
     st.plotly_chart(fig, width='stretch', theme=None)
 
-    # Legenda
+    
     st.markdown(
         f'<div style="font-size:11px;color:#94A3B8;padding:8px 12px;'
         f'background:#F8FAFC;border-radius:6px;border:1px solid #E2E8F0;line-height:1.8;">'
@@ -981,7 +956,6 @@ with tab_mapa:
             unsafe_allow_html=True,
         )
 
-    # ── Heatmap: Hub × Transportadora ──
     with col_heat:
         st.markdown(
             section_title("target", "Mapa de Calor — Atraso Médio (dias)"),
@@ -1011,7 +985,6 @@ with tab_mapa:
 with tab_custo:
     col_tree, col_bar = st.columns([3, 2])
 
-    # ── TreeMap ──
     with col_tree:
         st.markdown(
             section_title("bar-chart", "Custo Logístico por Hub e Transportadora"),
@@ -1038,7 +1011,6 @@ with tab_custo:
         _apply_axis_style(fig)
         st.plotly_chart(fig, width='stretch', theme=None)
 
-    # ── Custo Médio por Transportadora ──
     with col_bar:
         st.markdown(
             section_title("truck", "Custo Médio por Transportadora"),
@@ -1064,7 +1036,6 @@ with tab_custo:
         _apply_axis_style(fig)
         st.plotly_chart(fig, width='stretch', theme=None)
 
-    # ── Evolução Mensal do Custo ──
     st.markdown(
         section_title("trending-up", "Evolução Mensal do Custo de Frete"),
         unsafe_allow_html=True,
@@ -1086,7 +1057,6 @@ with tab_custo:
     _apply_axis_style(fig)
     st.plotly_chart(fig, width='stretch', theme=None)
 
-    # ── Tabela de Eficiência ──
     st.markdown(section_title("target", "Eficiência de Custo por Hub"), unsafe_allow_html=True)
 
     df_eff = (
@@ -1117,7 +1087,6 @@ with tab_decisao:
         unsafe_allow_html=True,
     )
 
-    # ── Cálculos para insights ──
     grp_transp_otd   = df.groupby("transportadora")["no_prazo"].mean()
     grp_transp_custo = df.groupby("transportadora")["custo_transporte"].mean()
     grp_hub_otd      = df.groupby("cidade_origem")["no_prazo"].mean()
@@ -1145,7 +1114,6 @@ with tab_decisao:
     worst_combo = df_combo.loc[df_combo["otd"].idxmin()]
     best_combo  = df_combo.loc[df_combo["otd"].idxmax()]
 
-    # ── Layout ──
     ci1, ci2 = st.columns(2)
 
     with ci1:
@@ -1205,7 +1173,6 @@ with tab_decisao:
             "success",
         ), unsafe_allow_html=True)
 
-    # ── Recomendações Estratégicas ──
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown(
         f'<div style="font-size:15px;font-weight:700;color:#0F69F2;margin-bottom:12px;">'
