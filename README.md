@@ -1,40 +1,130 @@
 # Dashboard de Performance Logística 🚚
 
-Dashboard interativo para análise de eficiência logística, permitindo aos gestores monitorar entregas, identificar gargalos e avaliar custos de transporte por região.
+Dashboard interativo para análise de eficiência logística, desenvolvido para monitorar entregas, identificar gargalos e avaliar custos de transporte.
 
-Sistema desenvolvido para gerenciamento estratégico de operações logísticas, oferecendo visão completa de transportadoras, performance de hubs e otimização de rotas.
-
-**Disciplina:** Fundamentos em Ciência de Dados  
-**Professor:** Assuero Ximenes  
-**Período:** 2025.2
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Python 3.8+**
-- **Streamlit** - Framework para interface web interativa
-- **Pandas** - Manipulação e análise de dados
-- **Plotly Express & Graph Objects** - Visualizações interativas e mapas
-- **NumPy** - Operações numéricas
-- **Hashlib** - Geração determinística de coordenadas simuladas
+- **Python 3.8+** - Linguagem de programação
+- **Streamlit 1.28.0+** - Framework para interface web interativa
+- **Pandas 2.0.0+** - Manipulação e análise de dados
+- **Plotly 5.18.0+** - Visualizações interativas e mapas geográficos
+- **NumPy** - Operações numéricas e cálculos
+- **Hashlib** (biblioteca padrão Python) - Geração determinística de coordenadas simuladas
 
-## 📦 Instalação
+### 📌 Instalação Manual de Dependências (sem requirements.txt)
 
-### 1. Instalar Python
-Certifique-se de ter o Python 3.8 ou superior instalado.
+Caso não utilize o arquivo `requirements.txt`, execute os seguintes comandos para instalar todas as bibliotecas necessárias:
 
-### 2. Instalar Dependências
+```powershell
+pip install streamlit>=1.28.0
+pip install pandas>=2.0.0
+pip install plotly>=5.18.0
+pip install numpy
+```
 
-**Opção 1 - Usando requirements.txt:**
+**Ou instale todas de uma vez:**
+```powershell
+pip install streamlit>=1.28.0 pandas>=2.0.0 plotly>=5.18.0 numpy
+```
+
+---
+
+## 📋 Pré-requisitos
+
+1. **Python 3.8 ou superior** instalado no sistema
+   - Verificar versão: `python --version`
+   - Download: [python.org](https://www.python.org/downloads/)
+
+2. **Pip** (gerenciador de pacotes Python) atualizado
+   - Geralmente vem instalado com Python
+   - Atualizar: `python -m pip install --upgrade pip`
+
+3. **Git** (opcional, para clonar o repositório)
+   - Download: [git-scm.com](https://git-scm.com/)
+
+---
+
+## 📦 Instalação e Configuração
+
+### Passo 1: Obter o Projeto
+
+**Opção A - Clonar o repositório (se estiver no GitHub):**
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd dashboardPerformanceLogística
+```
+
+**Opção B - Download manual:**
+1. Baixe o projeto como ZIP
+2. Extraia para uma pasta de sua preferência
+3. Abra o terminal/prompt na pasta do projeto
+
+### Passo 2: Criar Ambiente Virtual (Recomendado)
+
+**Windows (PowerShell):**
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+**Windows (CMD):**
+```cmd
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+**Linux/Mac:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+> **Nota:** O ambiente virtual isola as dependências do projeto. Você saberá que está ativo quando aparecer `(.venv)` no início da linha do terminal.
+
+### Passo 3: Instalar Dependências
+
+Com o ambiente virtual ativado, execute:
+
 ```powershell
 pip install -r requirements.txt
 ```
 
-**Opção 2 - Instalação manual:**
+**Instalação manual (alternativa):**
 ```powershell
-pip install streamlit pandas plotly numpy
+pip install streamlit>=1.28.0 pandas>=2.0.0 plotly>=5.18.0 numpy
 ```
 
-## 🎯 Execução
+### Passo 4: Verificar Arquivos Necessários
+
+Certifique-se de que os seguintes arquivos estão presentes na pasta do projeto:
+
+```
+dashboardPerformanceLogística/
+├── app.py                    # Código principal do dashboard
+├── requirements.txt          # Lista de dependências
+├── FCD_logistica.csv        # Base de dados (8001 registros)
+└── README.md                # Este arquivo
+```
+
+---
+
+## ▶️ Execução do Projeto
+
+### Passo 1: Ativar o Ambiente Virtual (se não estiver ativo)
+
+**Windows:**
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+**Linux/Mac:**
+```bash
+source .venv/bin/activate
+```
+
+### Passo 2: Executar o Dashboard
 
 No diretório do projeto, execute:
 
@@ -42,11 +132,163 @@ No diretório do projeto, execute:
 streamlit run app.py
 ```
 
-O dashboard será aberto automaticamente no navegador em `http://localhost:8501`
+### Passo 3: Acessar o Dashboard
 
-Para encerrar, pressione `Ctrl+C` no terminal.
+- O Streamlit abrirá automaticamente o navegador padrão
+- Caso não abra, acesse manualmente: **http://localhost:8501**
+- O dashboard estará pronto para uso
 
-## 📁 Estrutura de Arquivos
+### Passo 4: Encerrar a Aplicação
+
+- No terminal, pressione `Ctrl + C`
+- Para desativar o ambiente virtual: `deactivate`
+
+---
+
+## 🎯 Como Usar o Dashboard
+
+### 1. Filtros (Barra Lateral)
+
+Ao abrir o dashboard, você verá filtros na barra lateral esquerda:
+
+- **Período (De/Até)**: Selecione o intervalo de datas para análise
+  - Padrão: Todo o período disponível (01/01/2024 a 28/12/2024)
+  
+- **Transportadora**: Escolha uma ou mais transportadoras
+  - Opções: Correios, Jadlog, Loggi, Azul Cargo
+  - Padrão: Todas selecionadas
+  
+- **Hub de Origem**: Selecione os hubs de distribuição
+  - Opções: São Paulo, Curitiba, Belo Horizonte, Salvador, Recife
+  - Padrão: Todos selecionados
+  
+- **Status**: Filtre por status da entrega
+  - Opções: Entregue, Devolvido, Em trânsito
+  - Padrão: Todos selecionados
+
+### 2. Indicadores Principais (KPIs)
+
+No topo da página, você verá 5 indicadores-chave:
+
+- **Entregas no Prazo (OTD)**: Percentual de entregas pontuais
+- **Custo Total de Frete**: Soma dos custos de transporte
+- **Volume de Pedidos**: Total de pedidos e destinos únicos
+- **Tempo Médio de Entrega**: Prazo real médio em dias
+- **Taxa de Atraso**: Percentual e tempo médio de atrasos
+
+### 3. Abas de Análise
+
+#### **Aba 1: Performance**
+- Gráficos de tempo médio por transportadora
+- Taxa de entrega no prazo (OTD) comparativa
+- Evolução mensal do OTD
+- Cards de performance por hub
+
+#### **Aba 2: Mapa & Fluxos**
+- Mapa interativo com rotas de entrega
+- Controle de visualização por slider
+- Diagrama de fluxo Origem → Transportadora
+- Mapa de calor Hub × Transportadora
+
+#### **Aba 3: Análise de Custos**
+- TreeMap de custos por região
+- Custo total por hub
+- Evolução mensal dos custos
+- Tabela de eficiência (Top 15 combinações)
+
+#### **Aba 4: Decisões para Gestão**
+- Insights automáticos sobre transportadoras
+- Oportunidades de otimização de custos
+- Identificação de gargalos
+- Recomendações estratégicas
+
+### 4. Interação com Gráficos
+
+- **Hover**: Passe o mouse sobre elementos para ver detalhes
+- **Zoom**: Clique e arraste no mapa para aproximar/afastar
+- **Legenda**: Clique nos itens da legenda para ocultar/mostrar séries
+- **Slider**: No mapa, ajuste o número de rotas exibidas
+
+---
+
+## 🔧 Solução de Problemas
+
+### Erro: "streamlit: comando não encontrado"
+
+**Solução:**
+1. Certifique-se de que o ambiente virtual está ativado
+2. Reinstale o Streamlit: `pip install streamlit`
+3. Verifique a instalação: `streamlit --version`
+
+### Erro: "No module named 'pandas'" (ou plotly, numpy)
+
+**Solução:**
+```powershell
+pip install pandas plotly numpy
+```
+
+### Erro: "FileNotFoundError: FCD_logistica.csv"
+
+**Solução:**
+1. Verifique se o arquivo CSV está na mesma pasta que `app.py`
+2. Certifique-se de estar executando o comando no diretório correto
+3. Use `cd` para navegar até a pasta do projeto
+
+### Dashboard não abre no navegador
+
+**Solução:**
+1. Copie o endereço mostrado no terminal (geralmente `http://localhost:8501`)
+2. Cole no navegador manualmente
+3. Verifique se nenhuma outra aplicação está usando a porta 8501
+
+### Erro de porta em uso
+
+**Solução:**
+Execute com porta alternativa:
+```powershell
+streamlit run app.py --server.port 8502
+```
+
+---
+
+## 📊 Estrutura da Base de Dados
+
+**Arquivo:** `FCD_logistica.csv`  
+**Separador:** Ponto-e-vírgula (;)  
+**Encoding:** UTF-8  
+**Registros:** 8.001 entregas
+
+**Colunas:**
+- `pedido_id`: Identificador único
+- `data_pedido`: Data do pedido (dd/mm/yyyy)
+- `data_entrega`: Data da entrega (dd/mm/yyyy)
+- `transportadora`: Nome da transportadora
+- `cidade_origem`: Hub de origem (5 cidades)
+- `cidade_destino`: Cidade de destino (446 cidades)
+- `prazo_estimado_dias`: Prazo previsto
+- `prazo_real_dias`: Prazo real
+- `custo_transporte`: Valor do frete
+- `status_entrega`: Status da entrega
+
+---
+
+## 📝 Observações Finais
+
+- O dashboard utiliza **cache** para melhor performance após o primeiro carregamento
+- Todas as visualizações são **interativas** e responsivas
+- Os dados são **filtrados em tempo real** conforme seleção na sidebar
+- O mapa utiliza **coordenadas simuladas** para cidades fictícias (dados reais no hover)
+
+---
+
+## 🎓 Informações Acadêmicas
+
+**Projeto:** Dashboard de Performance Logística  
+**Disciplina:** Fundamentos em Ciência de Dados  
+**Professor:** Assuero Ximenes  
+**Período:** 2025.2
+
+**Objetivo:** O objetivo deste projeto é desenvolver um Dashboard de performance logística, permitindo aos gestores monitorar a eficiência das entregas, identificar gargalos e avaliar os custos logísticos por região. O foco é fornecer informações que apoiem decisões estratégicas sobre transportadoras, prazos e otimização de rotas.
 
 ```
 dashboardPerformanceLogística/
@@ -262,95 +504,6 @@ Veja métricas consolidadas no topo:
 - **Por Hub**: Agrupamento por `cidade_origem`
 - **Por Rota**: Combinação `cidade_origem` + `cidade_destino`
 - **Temporal**: Agregação mensal para gráficos de tendência
-
-## 🎨 Design
-
-- **Layout**: Wide mode com sidebar
-- **Tema**: Profissional com fundo branco
-- **Cores**:
-  - Azul (#2563EB): Destaque principal
-  - Verde (#16A34A): Sucesso/No prazo
-  - Vermelho (#DC2626): Crítico/Atrasado
-  - Amarelo (#D97706): Atenção
-- **Tipografia**: Inter, sans-serif
-- **Ícones**: SVG inline (estilo Lucide)
-- **Responsivo**: Colunas adaptáveis
-
-## 📊 Estrutura da Base de Dados
-
-**Arquivo**: `FCD_logistica.csv`  
-**Separador**: Ponto-e-vírgula (;)  
-**Encoding**: UTF-8  
-**Registros**: 8.001 linhas
-
-### Colunas:
-- `pedido_id`: Identificador único do pedido
-- `data_pedido`: Data do pedido (formato: dd/mm/yyyy)
-- `data_entrega`: Data da entrega (formato: dd/mm/yyyy)
-- `transportadora`: Nome da transportadora (Correios, Jadlog, Loggi, Azul Cargo)
-- `cidade_origem`: Hub de origem (São Paulo, Curitiba, Belo Horizonte, Salvador, Recife)
-- `cidade_destino`: Cidade de destino (446 cidades fictícias)
-- `prazo_estimado_dias`: Prazo previsto em dias
-- `prazo_real_dias`: Prazo real em dias
-- `custo_transporte`: Custo do frete (float)
-- `status_entrega`: Status (Entregue, Devolvido, Em trânsito)
-
-### Colunas Derivadas (calculadas no código):
-- `atraso_dias`: `prazo_real_dias - prazo_estimado_dias`
-- `no_prazo`: Booleano (True se atraso ≤ 0)
-- `atrasado`: Booleano (True se atraso > 0)
-- `mes`: Mês de referência (formato: YYYY-MM)
-
-## 🎯 Objetivo do Projeto
-
-Fornecer aos gestores logísticos uma ferramenta de **Business Intelligence** que permita:
-
-1. **Avaliar a eficiência das transportadoras**
-   - Comparar OTD, tempo médio e custos
-   - Identificar parcerias mais vantajosas
-
-2. **Identificar gargalos logísticos**
-   - Hubs com maior taxa de atraso
-   - Rotas problemáticas
-   - Períodos críticos
-
-3. **Planejar ações para reduzir custos**
-   - Otimizar distribuição entre hubs
-   - Negociar melhores tarifas
-   - Redirecionar rotas
-
-4. **Melhorar prazos de entrega**
-   - Focar em transportadoras eficientes
-   - Revisar estimativas de prazo
-   - Implementar melhorias operacionais
-
-## 📝 Observações Técnicas
-
-- **Cache**: Função `load_data()` usa `@st.cache_data` para performance
-- **Parsing de datas**: Formato brasileiro `%d/%m/%Y`
-- **Tratamento de dados**: Remoção de valores nulos em colunas críticas
-- **Visualizações**: Todas com `theme=None` para evitar conflito com tema dark do Streamlit
-- **Template Plotly**: `plotly_white` para melhor legibilidade
-- **Responsividade**: Uso de `width='stretch'` em todos os gráficos
-
-## 🏆 Componentes Implementados
-
-Todos os requisitos do projeto foram atendidos:
-
-✅ **a) KPI de Entregas no Prazo (%)** - Card de OTD com cor dinâmica  
-✅ **b) Tempo Médio de Entrega por Transportadora** - Gráfico de barras comparativo  
-✅ **c) Mapa Interativo com Fluxos Origem-Destino** - Mapa geográfico com rotas e volume  
-✅ **d) Custos Logísticos por Região** - TreeMap, gráficos e tabela de eficiência  
-✅ **e) Decisões para Gestores** - Tab completa com insights e recomendações automáticas
-
-## 📞 Suporte
-
-Para dúvidas sobre execução ou funcionalidades, consulte:
-- Esta documentação (README.md)
-- Comentários no código-fonte (app.py)
-- Professor da disciplina
-
----
 
 **Desenvolvido para**: Fundamentos em Ciência de Dados - 2025.2  
 **Tecnologia**: Python + Streamlit + Plotly
